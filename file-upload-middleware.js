@@ -1,11 +1,11 @@
-const axios = require('axios')
-const cloudinary = require('cloudinary')
+import axios from 'axios';
+import cloudinary from 'cloudinary';
 
 function fileUploadMiddleware(req, res) {
   cloudinary.uploader.upload_stream((result) => {
-    console.log(`${req.headers.origin}/api/changeProfilePicture`)
+    console.log(`${req.headers.origin}/api/changeProfilePicture`);
     axios({
-      url: `${req.headers.origin}/api/changeProfilePicture`, //API endpoint that needs file URL from CDN
+      url: `${req.headers.origin}/api/changeProfilePicture`, // API endpoint that needs file URL from CDN
       method: 'post',
       data: {
         url: result.secure_url,
@@ -14,12 +14,12 @@ function fileUploadMiddleware(req, res) {
       },
     }).then((response) => {
       // you can handle external API response here
-      res.status(200).json({ success: true, fileUrl: result.secure_url })
+      res.status(200).json({ success: true, fileUrl: result.secure_url });
     }).catch((error) => {
-      console.log(error)
+      console.log(error);
       res.status(500).json(error.response.data);
     });
   }).end(req.file.buffer);
 }
 
-module.exports = fileUploadMiddleware
+export default fileUploadMiddleware;
